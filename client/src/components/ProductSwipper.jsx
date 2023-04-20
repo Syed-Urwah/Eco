@@ -49,8 +49,8 @@ export default function ProductSwipper({ product }) {
             >
                 {product.images &&
                     product.images.map((images) => {
-                        return <SwiperSlide key={images} className="h-52 w-52 hover:cursor-pointer">
-                                    <img className="w-full h-1/2 object-cover rounded-2xl" src={images} />
+                        return <SwiperSlide key={images} className=" w-80 lg:w-52 hover:cursor-pointer">
+                                    <img className="w-full object-cover rounded-2xl" src={images} />
                                 </SwiperSlide>
                     })
                 }

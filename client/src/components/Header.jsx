@@ -28,6 +28,7 @@ export default function Header() {
                 <li><Link to="/products">Products</Link></li>
                 <li><a href="/">About</a></li>
                 <li><a href="/">Support</a></li>
+                <li><Link to="/login">Login</Link></li>
               </ul>
             </nav>
             <div className="right hidden md:flex gap-6 ">
