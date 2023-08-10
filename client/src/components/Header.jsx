@@ -1,13 +1,22 @@
 import { faArrowLeftLong, faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import menuPic from '../assets/images/menu.png'
 import { Link, NavLink, Outlet } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { motion } from 'framer-motion'
 
 export default function Header() {
 
+  const userData = useSelector((state)=> state.user.currentUser);
+
+  //states
   const [search, setSearch] = useState(false)
   const [menu, setMenu] = useState(false)
+
+  useEffect(()=>{
+    console.log(Object.keys(userData).length);
+  },[userData])
 
   return (
     <header className='bg-white text-black fixed w-11/12 h-12 left-[4%] flex justify-between items-center px-4 rounded-xl mt-4 z-20'>
@@ -16,7 +25,16 @@ export default function Header() {
         search ?
           <div className="search w-full flex items-center">
             <FontAwesomeIcon onClick={() => setSearch((prev) => !prev)} className='px-2 hover:cursor-pointer' icon={faArrowLeftLong} />
-            <input autoFocus className='w-full border border-gray-600 rounded-xl' type='text' />
+            <motion.input
+            initial={{
+              width: 0,
+              x: "100%"
+            }} 
+            animate={{
+              width: search ? '100%' : 0,
+              x: 0,
+              direction: 'revert'
+            }} autoFocus className=' border border-gray-600 rounded-xl' type='text' />
           </div> :
           <>
             <div className="logo font-semibold">
@@ -28,18 +46,21 @@ export default function Header() {
                 <li><Link to="/products">Products</Link></li>
                 <li><a href="/">About</a></li>
                 <li><a href="/">Support</a></li>
-                <li><Link to="/login">Login</Link></li>
+                {/* <li><Link to="/login">Login</Link></li> */}
               </ul>
             </nav>
-            <div className="right hidden md:flex gap-6 ">
+            <div className="right hidden md:flex items-center gap-6 ">
               <FontAwesomeIcon icon={faCartShopping} style={{ color: "#3584e4", }} />
               <FontAwesomeIcon onClick={() => setSearch((prev) => !prev)} className='hover:cursor-pointer' icon={faMagnifyingGlass} />
+              {Object.keys(userData).length > 0 ? <Link to="#">{userData.username}</Link> :
+               <Link to="/login">Login</Link> }
             </div>
           </>
       }
       <div className="responsiveCart flex items-center gap-4 md:hidden">
         <FontAwesomeIcon  icon={faCartShopping} style={{ color: "#3584e4", }} />
         <img onClick={() => setMenu((prev) => !prev)} className=' hover:cursor-pointer' src={menuPic} alt="" />
+        {Object.keys(userData).length > 0 ? <h2>yoyyo</h2> : "not"}
       </div>
 
       <div className={`responsiveMenu ${menu ? 'slide-left' : 'slide-right'} md:hidden absolute top-14 right-[-55%] rounded-md bg-white w-1/2 h-[80vh]`}>
