@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SingleProduct from './pages/SingleProduct';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
+import { configDotenv } from 'dotenv';
 
 function App() {
 

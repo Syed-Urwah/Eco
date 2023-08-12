@@ -1,23 +1,29 @@
 const express = require('express');
-const mongoose = require('mongoose')
-const cors = require('cors')
-const auth = require('./routes/auth');
+const dotenv = require('dotenv').config();
+const connectToDB = require('./db')
+const userRoute = require('./routes/user');
+const authRoute = require('./routes/auth');
+const productRoute = require('./routes/product');
+const cartRoute = require('./routes/cart');
+const cors = require('cors');
 
 const app = express();
 
-//connecting to db
-mongoose.connect('mongodb://localhost:27017/ecommerce')
+connectToDB();
 
-//middleware
-app.use(express.json());
-app.use(cors())
-app.use('/auth', auth);
-
-app.get('/test', (req,res)  =>{
-    res.send('heeloo')  
+app.get('/', ()=>{
+    console.log("hello")
 })
 
+app.use(cors())
+app.use(express.json());
 
-app.listen(8081, ()=>{
-    console.log('server runing')
+app.use('/api/auth', authRoute );
+app.use('/api/user', userRoute );
+app.use('/api/product', productRoute );
+app.use('/api/cart', cartRoute );
+
+
+app.listen(8000, ()=>{
+    console.log("server is running")
 })
