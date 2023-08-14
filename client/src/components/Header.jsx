@@ -2,21 +2,30 @@ import { faArrowLeftLong, faCartShopping, faMagnifyingGlass } from '@fortawesome
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
 import menuPic from '../assets/images/menu.png'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
 
 export default function Header() {
 
   const userData = useSelector((state)=> state.user.currentUser);
+  const location = useLocation();
+  
 
   //states
   const [search, setSearch] = useState(false)
   const [menu, setMenu] = useState(false)
 
+  
+
   useEffect(()=>{
-    console.log(Object.keys(userData).length);
-  },[userData])
+    setMenu(false);
+  },[location])
+
+  function handleSideBar(){
+    const sideBar = document.getElementById("sidebar-multi-level-sidebar");
+    sideBar.classList.toggle('-translate-x-full');
+}
 
   return (
     <header className='bg-white text-black fixed w-11/12 h-12 left-[4%] flex justify-between items-center px-4 rounded-xl mt-4 z-20'>
@@ -37,7 +46,11 @@ export default function Header() {
             }} autoFocus className=' border border-gray-600 rounded-xl' type='text' />
           </div> :
           <>
-            <div className="logo font-semibold">
+            <div className="logo font-semibold flex gap-4">
+            {
+              location.pathname.split('/')[1] == 'admin' && 
+              <img onClick={handleSideBar} className=' hover:cursor-pointer block sm:hidden' src={menuPic} alt="" />
+            }
               <h2>Eco</h2>
             </div>
             <nav className="center hidden md:block">
@@ -60,15 +73,15 @@ export default function Header() {
       <div className="responsiveCart flex items-center gap-4 md:hidden">
         <FontAwesomeIcon  icon={faCartShopping} style={{ color: "#3584e4", }} />
         <img onClick={() => setMenu((prev) => !prev)} className=' hover:cursor-pointer' src={menuPic} alt="" />
-        {Object.keys(userData).length > 0 ? <h2>yoyyo</h2> : "not"}
+        {Object.keys(userData).length > 0 ? <h2>{userData.username}</h2> : "not"}
       </div>
 
-      <div className={`responsiveMenu ${menu ? 'slide-left' : 'slide-right'} md:hidden absolute top-14 right-[-55%] rounded-md bg-white w-1/2 h-[80vh]`}>
+      <div className={`responsiveMenu ${menu ? 'opacity-100 slide-left' : 'slide-right opacity-0'} md:hidden absolute top-14 right-[-55%] rounded-md bg-white w-1/2 h-[80vh]`}>
         <ul className='flex gap-4 h-full justify-center flex-col items-center font-semibold text-xl'>
-          <li><a href="#">Home</a></li>
+          <li><Link to="/">Home</Link></li>
           <li><a href="#">Products</a></li>
           <li><a href="#">About</a></li>
-          <li><a href="#">Support</a></li>
+          <li><Link to="/admin">Support</Link></li>
         </ul>
       </div>
 
