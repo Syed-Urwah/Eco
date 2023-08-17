@@ -7,9 +7,14 @@ export default function FeaturedProducts() {
     const [products, setProducts] = useState([]);
 
     const fetchProducts = async () => {
-        const response = await axios.get('https://dummyjson.com/products?limit=10');
-        console.log(response.data.products);
-        setProducts(response.data.products);
+        try {
+            const response = await axios.get('https://dummyjson.com/products?limit=10');
+            console.log(response.data.products);
+            setProducts(response.data.products);
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     useEffect(() => {
