@@ -9,6 +9,12 @@ import Registration from './pages/Registration';
 import { configDotenv } from 'dotenv';
 import SideBar from './components/SideBar';
 import Dashboard from './pages/Admin/Dashboard';
+import AdminProducts from './pages/Admin/products/Products'
+import AddProduct from './pages/Admin/products/AddProduct'
+import Order from './pages/Admin/orders/orders';
+import AddOrder from './pages/Admin/orders/AddOrder';
+import Users from './pages/Admin/users/Users';
+import AddUser from './pages/Admin/users/AddUser';
 
 function App() {
 
@@ -17,21 +23,34 @@ function App() {
   return (
 
     <>
-        <BrowserRouter>
-          <Header />
-          <Routes>
-            <Route index element={<Home />} />
-            <Route path='products' element={<ArchiveProduct />} />
-            <Route path='single-product' element={<SingleProduct />} />
-            <Route path='login' element={<Login />} />
-            <Route path='registration' element={<Registration />} />
-            <Route path="/admin">
-              <Route index element={<Dashboard />} />
-              <Route path="products" element={<SideBar />} />
-              {/* <Route path="new" element={<NewBook />} /> */}
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path='products' element={<ArchiveProduct />} />
+          <Route path='single-product' element={<SingleProduct />} />
+          <Route path='login' element={<Login />} />
+          <Route path='registration' element={<Registration />} />
+          <Route path="/admin">
+            <Route index element={<Dashboard />} />
+            <Route path='products'>
+              <Route index element={<AdminProducts />} />
+              <Route path='add' element={<AddProduct />} />
             </Route>
-          </Routes>
-        </BrowserRouter>
+
+            <Route path='orders'>
+              <Route index element={<Order />} />
+              <Route path='add' element={<AddOrder />} />
+            </Route>
+
+            <Route path='users'>
+              <Route index element={<Users/>} />
+              <Route path='add' element={<AddUser/>} />
+            </Route>
+            {/* <Route path="new" element={<NewBook />} /> */}
+          </Route>
+        </Routes>
+      </BrowserRouter>
 
     </>
   )
