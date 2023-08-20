@@ -15,12 +15,18 @@ export default function Header() {
   //states
   const [search, setSearch] = useState(false)
   const [menu, setMenu] = useState(false)
+  const [show, setShow] = useState(true);
 
   
 
   useEffect(()=>{
     setMenu(false);
-    // console.log(loca)
+    if(location.pathname.split('/')[1] == "admin"){
+      setShow(false);
+    }else{
+      setShow(true);
+    }
+    console.log(location.pathname.split('/')[1])
   },[location])
 
   function handleSideBar(){
@@ -29,7 +35,7 @@ export default function Header() {
 }
 
   return (
-    <header className='bg-white text-black fixed w-11/12 h-12 left-[4%] flex justify-between items-center px-4 rounded-xl mt-4 z-20'>
+    <header className={`${!show && "hidden"} bg-white text-black fixed w-11/12 h-12 left-[4%] flex justify-between items-center px-4 rounded-xl mt-4 z-20`}>
 
       {
         search ?
@@ -91,7 +97,7 @@ export default function Header() {
           <li><Link to="/">Home</Link></li>
           <li><a href="#">Products</a></li>
           <li><a href="#">About</a></li>
-          <li><Link to="/admin">Support</Link></li>
+          <li><Link to="/admin">Admin</Link></li>
         </ul>
       </div>
 

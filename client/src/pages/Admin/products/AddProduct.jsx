@@ -1,11 +1,12 @@
 import React from 'react'
 import SideBar from '../../../components/SideBar'
+import sideBarClose from '../../../assets/functions/sidebarClose'
 
 export default function AddProduct() {
     return (
         <div className="body-container dark:bg-gray-800 min-h-screen">
             <SideBar />
-            <div className="md:ml-64 pt-20">
+            <div onClick={sideBarClose} className="md:ml-64 pt-20">
                 <div className="px-4 rounded-lg">
                     <div className="title dark:text-white text-gray-900">
                         <h2 className='text-3xl'>Add Product</h2>
