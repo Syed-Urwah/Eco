@@ -8,6 +8,7 @@ export default {
     extend: {
       colors: {
         'admin-sidebar': '#9ca3af',
+        'primary-btn': '#003171'
       },
     }
   },

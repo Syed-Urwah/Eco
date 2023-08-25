@@ -17,43 +17,43 @@ export default function AddProduct() {
                             <div id="left" className='w-full flex flex-col gap-4 outline outline-red-700'>
 
                                 <div id='first-row' className="flex flex-col gap-2">
-                                    <label htmlFor="product-name" className=' text-gray-800'>Product Name</label>
+                                    <label htmlFor="product-name" className=' text-gray-800 font-semibold'>Product Name</label>
                                     <input className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="product-name" id="product-name" />
                                 </div>
 
                                 <div id='second-row' className="flex gap-2 ">
                                     <div id="category" className='flex flex-col gap-2 w-3/4  outline-blue-600'>
-                                        <label htmlFor="category" className=' text-gray-800'>Category</label>
+                                        <label htmlFor="category" className=' text-gray-800 font-semibold'>Category</label>
                                         <input className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="category" id="category" />
                                     </div>
 
                                     <div id="gender" className='flex flex-col gap-2 w-3/12 min-w-fit  outline-red-600'>
-                                        <label htmlFor="gender" className=' text-gray-800'>Gender</label>
+                                        <label htmlFor="gender" className=' text-gray-800 font-semibold'>Gender</label>
                                         <select id="large" class="block w-full px-4 py-1 text-base text-gray-900 rounded bg-gray-50 focus:ring-blue-500 focus:border-blue-500  bg-transparent  dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 border  border-gray-800">
-                                            <option value='m' className='text-gray-800' selected>Male</option>
-                                            <option value="f" className='text-gray-800'>Female</option>
+                                            <option value='m' className='text-gray-800 font-semibold' selected>Male</option>
+                                            <option value="f" className='text-gray-800 font-semibold'>Female</option>
                                         </select>
                                     </div>
 
                                 </div>
 
                                 <div id='third-row' className="flex flex-col gap-2">
-                                    <label htmlFor="brand" className=' text-gray-800'>Brand</label>
+                                    <label htmlFor="brand" className=' text-gray-800 font-semibold'>Brand</label>
                                     <input className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="brand" id="brand" />
                                 </div>
 
                                 <div id='fourth-row' className="flex flex-col gap-2">
-                                    <label htmlFor="description" className=' text-gray-800'>Description</label>
+                                    <label htmlFor="description" className=' text-gray-800 font-semibold'>Description</label>
                                     <textarea className='h-36 rounded resize-none bg-transparent border  border-gray-800  text-gray-800' name="description" id="description" />
                                 </div>
 
                             </div>
 
-                            <div id="right" className='w-full outline outline-green-700'>
-                                <div id='first-row' className="flex flex-col gap-2">
-                                    <p className=' text-gray-800'>Product Image</p>
+                            <div id="right" className='w-full outline outline-green-700 flex flex-col gap-4'>
+                                <div id='images-row' className="flex flex-col gap-2">
+                                    <p className=' text-gray-800 font-semibold'>Product Images</p>
 
-                                    <div id="images" className='flex flex-row-reverse flex-wrap min-w-fit gap-2'>
+                                    <div id="images" className='flex flex-wrap min-w-fit gap-2'>
 
                                       
 
@@ -118,6 +118,12 @@ export default function AddProduct() {
                                     </div>
 
 
+                                </div>
+
+                                <div id="bottom-button" className='flex justify-center gap-5'>
+                                    <button className='bg-primary-btn text-white px-4 py-2 rounded'>Add Product</button>
+                                    <button className='bg-primary-btn text-white px-4 py-2 rounded'>Save Product</button>
+                                    <button className='bg-primary-btn text-white px-4 py-2 rounded'>Schedule</button>
                                 </div>
                             </div>
                         </form>
