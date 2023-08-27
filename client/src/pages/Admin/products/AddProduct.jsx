@@ -1,61 +1,114 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SideBar from '../../../components/SideBar'
-import sideBarClose from '../../../assets/functions/sidebarClose'
+import sideBarClose from '../../../assets/functions/sideBarClose'
+import ColorPicker from '../../../components/ColorPicker';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from '../../../utils/firebase';
+
 
 export default function AddProduct() {
+
+    const handleImageUpload = (image) => {
+
+        const storageRef = ref(storage, 'images/filename.jpg');
+
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        
+
+    }
+
+    const [color, setColor] = useState("#fff");
+    const [product, setProduct] = useState({
+        title: "",
+        description: "",
+        img: [],
+        categories: [],
+        size: "",
+        status: "",
+        price: ""
+    })
+
+    function isNumber(input) {
+        return !isNaN(parseFloat(input)) && isFinite(input);
+    }
+
+    function numberValidation(e) {
+        if (isNumber(e.target.value) || e.target.value == "") {
+            console.log(e.key);
+            setProduct({ ...product, price: e.target.value })
+        }
+    }
+
+
+    const handleProductSubmit = (e) => {
+        e.preventDefault();
+        console.log(color)
+    }
+
+    function handleCategories(e) {
+        let cat = e.target.value.split(',')
+        setProduct({ ...product, categories: cat });
+    }
+
+
     return (
         <div className="body-container  min-h-screen">
             <SideBar />
             <div onClick={sideBarClose} className="md:ml-64 ">
                 <div className="px-4 rounded-lg">
-                    <div className="title text-gray-900">
+                    <div className="title text-gray-900 pt-12">
                         <h2 className='text-3xl'>Add Product</h2>
                     </div>
 
-                    <div id="form-container" className='w-full mt-7 pt-20'>
-                        <form action="" className='flex gap-4'>
-                            <div id="left" className='w-full flex flex-col gap-4 outline outline-red-700'>
+                    <div id="form-container" className='w-full pt-20'>
+                        <form onSubmit={handleProductSubmit} className='flex gap-4 flex-wrap lg:flex-nowrap '>
+                            <div id="left1" className='w-full flex flex-col gap-4  outline-red-700'>
 
                                 <div id='first-row' className="flex flex-col gap-2">
                                     <label htmlFor="product-name" className=' text-gray-800 font-semibold'>Product Name</label>
-                                    <input className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="product-name" id="product-name" />
+                                    <input value={product.title} onChange={(e) => setProduct({ ...product, title: e.target.value })} className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="product-name" id="product-name" />
                                 </div>
 
                                 <div id='second-row' className="flex gap-2 ">
                                     <div id="category" className='flex flex-col gap-2 w-3/4  outline-blue-600'>
                                         <label htmlFor="category" className=' text-gray-800 font-semibold'>Category</label>
-                                        <input className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="category" id="category" />
+                                        <input onChange={handleCategories} className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="category" id="category" placeholder='seperate by comma' />
+
                                     </div>
 
-                                    <div id="gender" className='flex flex-col gap-2 w-3/12 min-w-fit  outline-red-600'>
-                                        <label htmlFor="gender" className=' text-gray-800 font-semibold'>Gender</label>
-                                        <select id="large" class="block w-full px-4 py-1 text-base text-gray-900 rounded bg-gray-50 focus:ring-blue-500 focus:border-blue-500  bg-transparent  dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 border  border-gray-800">
-                                            <option value='m' className='text-gray-800 font-semibold' selected>Male</option>
-                                            <option value="f" className='text-gray-800 font-semibold'>Female</option>
+                                    <div id="size" className='flex flex-col gap-2 w-3/12 min-w-fit  outline-red-600'>
+                                        <label htmlFor="size" className=' text-gray-800 font-semibold'>Size</label>
+                                        <select value={product.size} onChange={(e) => setProduct({ ...product, size: e.target.value })} id="large" class="block w-full px-4 py-1 text-base text-gray-900 rounded bg-gray-50 focus:ring-blue-500 focus:border-blue-500  bg-transparent  dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500 border  border-gray-800">
+                                            <option className='text-gray-800 font-semibold' selected>Select Size</option>
+                                            <option value='s' className='text-gray-800 font-semibold'>S</option>
+                                            <option value="m" className='text-gray-800 font-semibold'>M</option>
+                                            <option value="l" className='text-gray-800 font-semibold'>L</option>
+                                            <option value="xl" className='text-gray-800 font-semibold'>XL</option>
                                         </select>
                                     </div>
 
                                 </div>
 
                                 <div id='third-row' className="flex flex-col gap-2">
-                                    <label htmlFor="brand" className=' text-gray-800 font-semibold'>Brand</label>
-                                    <input className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="brand" id="brand" />
+                                    <label htmlFor="price" className=' text-gray-800 font-semibold'>Price</label>
+                                    <input value={product.price} onChange={numberValidation} className='h-8 rounded bg-transparent border  border-gray-800  text-gray-800' type="text" name="price" id="price" pattern="[1-9]" />
                                 </div>
 
                                 <div id='fourth-row' className="flex flex-col gap-2">
                                     <label htmlFor="description" className=' text-gray-800 font-semibold'>Description</label>
-                                    <textarea className='h-36 rounded resize-none bg-transparent border  border-gray-800  text-gray-800' name="description" id="description" />
+                                    <textarea value={product.description} onChange={(e) => setProduct({ ...product, description: e.target.value })} className='h-36 rounded resize-none bg-transparent border  border-gray-800  text-gray-800' name="description" id="description" />
                                 </div>
 
                             </div>
 
-                            <div id="right" className='w-full outline outline-green-700 flex flex-col gap-4'>
+                            <div id="right" className='w-full outline-green-700 flex flex-col justify-between gap-4'>
                                 <div id='images-row' className="flex flex-col gap-2">
                                     <p className=' text-gray-800 font-semibold'>Product Images</p>
 
                                     <div id="images" className='flex flex-wrap min-w-fit gap-2'>
 
-                                      
+
 
 
                                         <div id="right-images" className='flex gap-2 '>
@@ -120,8 +173,14 @@ export default function AddProduct() {
 
                                 </div>
 
-                                <div id="bottom-button" className='flex justify-center gap-5'>
-                                    <button className='bg-primary-btn text-white px-4 py-2 rounded'>Add Product</button>
+                                <div id="color-input" className='flex flex-col gap-2'>
+                                    <label htmlFor="product-name" className=' text-gray-800 font-semibold'>Color</label>
+                                    <ColorPicker color={color} setColor={setColor} />
+
+                                </div>
+
+                                <div id="bottom-button" className='flex gap-5'>
+                                    <button onClick={handleProductSubmit} className='bg-primary-btn text-white px-4 py-2 rounded'>Add Product</button>
                                     <button className='bg-primary-btn text-white px-4 py-2 rounded'>Save Product</button>
                                     <button className='bg-primary-btn text-white px-4 py-2 rounded'>Schedule</button>
                                 </div>

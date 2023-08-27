@@ -1,6 +1,6 @@
 import React from 'react'
 import SideBar from '../../components/SideBar'
-import sideBarClose from '../../assets/functions/sidebarClose';
+import sideBarClose from '../../assets/functions/sideBarClose';
 
 export default function Dashboard() {
 

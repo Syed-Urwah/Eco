@@ -1,11 +1,13 @@
 import React from 'react'
 import SideBar from '../../../components/SideBar'
+import sideBarClose from '../../../assets/functions/sideBarClose'
+
 
 export default function Users() {
     return (
         <div className="body-container bg-gray-700">
             <SideBar/>
-            <div className="p-4 md:ml-64">
+            <div onClick={sideBarClose} className="p-4 md:ml-64">
                 <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
                     <div className="grid grid-cols-3 gap-4 mb-4">
                         <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
