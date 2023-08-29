@@ -3,7 +3,8 @@ import ColorPicker from '../components/ColorPicker';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '../utils/firebase';
 import { RxCross2 } from "react-icons/rx";
-import {Img} from 'react-image'
+import { Img } from 'react-image'
+import axios from 'axios';
 
 
 export default function AddProductForm() {
@@ -23,11 +24,13 @@ export default function AddProductForm() {
   });
   const [img3, setImg3] = useState({
     file: "",
-    url: ""
+    url: "",
+    loading: false
   });
   const [img4, setImg4] = useState({
     file: "",
-    url: ""
+    url: "",
+    loading: false
   });
 
 
@@ -35,7 +38,6 @@ export default function AddProductForm() {
   const [product, setProduct] = useState({
     title: "",
     description: "",
-    img: [],
     categories: [],
     size: "",
     status: "",
@@ -58,9 +60,33 @@ export default function AddProductForm() {
   }
 
 
-  const handleProductSubmit = (e) => {
+  const handleProductAdd = async (e) => {
     e.preventDefault();
-    console.log(color)
+    try {
+      const url = import.meta.env.VITE_BASEURL + '/api/product/add';
+      let id = e.target.id
+      console.log(e.target.id);
+      const response = await axios.post(url, {
+        title: product.title,
+        description: product.description,
+        img: [img1.url, img2.url, img3.url, img3.url],
+        price: product.price,
+        size: product.size,
+        categories: product.categories,
+        color: color,
+        status: id == 'add' ? "published" : 'draft'
+      }, {
+        headers: {
+          accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0YzkyNWEzZmNlNmU3YmNkOWVhODVhYSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTY5MTA3NjU0MH0.ZBYiFrrGIaBbevVrX62RZw8Q03wHwmxllhwEVoPWSu0'
+        }
+      })
+      console.log(response)
+
+    } catch (error) {
+      console.log(error.response.data.keyPattern.title)
+    }
+
+
   }
 
   function handleCategories(e) {
@@ -74,7 +100,7 @@ export default function AddProductForm() {
     if (imageOrder == 1) {
       setImg1({ ...img1, file: e.target.files[0] });
       handleImageUpload(e.target.files[0], 1)
-    } 
+    }
     else if (imageOrder == 2) {
       setImg2({ ...img2, file: e.target.files[0] });
       handleImageUpload(e.target.files[0], 2)
@@ -107,7 +133,7 @@ export default function AddProductForm() {
             break;
           case 'running':
             console.log('Upload is running');
-            imageOrder == 1 && setImg1({ ...img1, loading: true})
+            imageOrder == 1 && setImg1({ ...img1, loading: true })
             imageOrder == 2 && setImg2({ ...img2, loading: true })
             imageOrder == 3 && setImg3({ ...img3, loading: true })
             imageOrder == 4 && setImg4({ ...img4, loading: true })
@@ -136,10 +162,10 @@ export default function AddProductForm() {
         // Upload completed successfully, now we can get the download URL
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log('File available at', downloadURL);
-          imageOrder == 1 && setImg1({ ...img1, url: downloadURL,loading: false})
-          imageOrder == 2 && setImg2({ ...img2, url: downloadURL, loading:false })        
-          imageOrder == 3 && setImg3({ ...img3, url: downloadURL, loading:false })        
-          imageOrder == 4 && setImg4({ ...img4, url: downloadURL, loading:false })        
+          imageOrder == 1 && setImg1({ ...img1, url: downloadURL, loading: false })
+          imageOrder == 2 && setImg2({ ...img2, url: downloadURL, loading: false })
+          imageOrder == 3 && setImg3({ ...img3, url: downloadURL, loading: false })
+          imageOrder == 4 && setImg4({ ...img4, url: downloadURL, loading: false })
         });
       }
     );
@@ -163,7 +189,7 @@ export default function AddProductForm() {
 
 
   return (
-    <form onSubmit={handleProductSubmit} className='flex gap-4 flex-wrap lg:flex-nowrap '>
+    <form onSubmit={handleProductAdd} className='flex gap-4 flex-wrap lg:flex-nowrap '>
       <div id="left1" className='w-full flex flex-col gap-4  outline-red-700'>
 
         <div id='first-row' className="flex flex-col gap-2">
@@ -217,7 +243,7 @@ export default function AddProductForm() {
               <div class="flex items-center justify-center w-60 ">
                 {
                   img1.url ? <div className="image h-full w-full">
-                    <RxCross2 onClick={() => setImg1({ ...img1, url: "",file: "" })} className='absolute text-3xl hover:cursor-pointer text-white bg-black rounded-full' />
+                    <RxCross2 onClick={() => setImg1({ ...img1, url: "", file: "" })} className='absolute text-3xl hover:cursor-pointer text-white bg-black rounded-full' />
                     <img src={img1.url} className='h-full w-full' alt="thumbnail" />
                   </div> : img1.loading ?
 
@@ -227,7 +253,7 @@ export default function AddProductForm() {
                           <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
                         </svg>
                       </div>
-                      
+
                       <span class="sr-only">Loading...</span>
                     </div>
 
@@ -247,24 +273,24 @@ export default function AddProductForm() {
               </div>
 
               <div id="small-images" className='flex flex-wrap w-28 gap-y-1'>
-                <div class="flex items-center justify-center w-full ">
+                <div class="flex items-center justify-center w-full h-[125px]">
                   {
                     img2.url ? <div className="image h-full w-full">
-                    <RxCross2 onClick={() => setImg2({ ...img2, url: "",file: "" })} className='absolute text-3xl hover:cursor-pointer text-white bg-black rounded-full' />
-                    <img src={img2.url} className='h-full w-full' alt="thumbnail" />
-                  </div> : img2.loading ?
+                      <RxCross2 onClick={() => setImg2({ ...img2, url: "", file: "" })} className='absolute text-3xl hover:cursor-pointer text-white bg-black rounded-full' />
+                      <img src={img2.url} className='h-full w-full' alt="thumbnail" />
+                    </div> : img2.loading ?
 
-                    <div role="status" class="space-y-8 w-full h-full animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-                      <div class="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
-                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                          <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                        </svg>
+                      <div role="status" class="space-y-8 w-full h-full animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                        <div class="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
+                          <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                            <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                          </svg>
+                        </div>
+
+                        <span class="sr-only">Loading...</span>
                       </div>
-                      
-                      <span class="sr-only">Loading...</span>
-                    </div>
 
-                    :
+                      :
                       <label for="product-image-2" class="flex flex-col items-center justify-center w-full h-[125px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                         <div class="flex flex-col items-center justify-center pt-5 pb-6">
                           <svg class="w-4 h-4 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -282,33 +308,33 @@ export default function AddProductForm() {
                 <div class="flex items-center justify-center w-full ">
                   {
                     img3.url ? <div className="image h-full w-full">
-                    <RxCross2 onClick={() => setImg3({ ...img3, url: "",file: "" })} className='absolute text-3xl hover:cursor-pointer text-white bg-black rounded-full' />
-                    <img src={img3.url} className='h-full w-full' alt="thumbnail" />
-                  </div> : img3.loading ?
+                      <RxCross2 onClick={() => setImg3({ ...img3, url: "", file: "" })} className='absolute text-3xl hover:cursor-pointer text-white bg-black rounded-full' />
+                      <img src={img3.url} className='h-full w-full' alt="thumbnail" />
+                    </div> : img3.loading ?
 
-                    <div role="status" class="space-y-8 w-full h-full animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-                      <div class="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
-                        <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                          <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                        </svg>
+                      <div role="status" class="space-y-8 w-full h-full animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                        <div class="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
+                          <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                            <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                          </svg>
+                        </div>
+
+                        <span class="sr-only">Loading...</span>
                       </div>
-                      
-                      <span class="sr-only">Loading...</span>
-                    </div>
 
-                    :
-                    <label for="product-image-3" class="flex flex-col items-center justify-center w-full h-[125px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg class="w-4 h-4 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                      </svg>
-                      <p class="mb-2 text-[8px] text-center text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                      <p class="text-[8px] text-center text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                    </div>
-                    <input onChange={getImage} id="product-image-3" accept='image/*' type="file" class="hidden" />
-                  </label>
+                      :
+                      <label for="product-image-3" class="flex flex-col items-center justify-center w-full h-[125px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg class="w-4 h-4 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                          </svg>
+                          <p class="mb-2 text-[8px] text-center text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                          <p class="text-[8px] text-center text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                        </div>
+                        <input onChange={getImage} id="product-image-3" accept='image/*' type="file" class="hidden" />
+                      </label>
                   }
-                 
+
                 </div>
               </div>
             </div>
@@ -316,33 +342,33 @@ export default function AddProductForm() {
             <div class="flex items-center justify-center w-60 h-64">
               {
                 img4.url ? <div className="image h-full w-full">
-                <RxCross2 onClick={() => setImg4({ ...img4, url: "",file: "" })} className='absolute text-3xl hover:cursor-pointer text-white bg-black rounded-full' />
-                <Img src={img4.url} className='h-full w-full' alt="thumbnail" />
-              </div> : img4.loading ?
+                  <RxCross2 onClick={() => setImg4({ ...img4, url: "", file: "" })} className='absolute text-3xl hover:cursor-pointer text-white bg-black rounded-full' />
+                  <Img src={img4.url} className='h-full w-full' alt="thumbnail" />
+                </div> : img4.loading ?
 
-                <div role="status" class="space-y-8 w-full h-full animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
-                  <div class="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
-                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                      <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
-                    </svg>
+                  <div role="status" class="space-y-8 w-full h-full animate-pulse md:space-y-0 md:space-x-8 md:flex md:items-center">
+                    <div class="flex items-center justify-center w-full h-full bg-gray-300 rounded dark:bg-gray-700">
+                      <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                      </svg>
+                    </div>
+
+                    <span class="sr-only">Loading...</span>
                   </div>
-                  
-                  <span class="sr-only">Loading...</span>
-                </div>
 
-                :
-                <label for="product-image-4" class="flex flex-col px-10 items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                  <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
-                  </svg>
-                  <p class="mb-2 text-sm text-center text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                  <p class="text-xs text-center text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-                </div>
-                <input onChange={getImage} id="product-image-4" type="file" accept='image/*' class="hidden" />
-              </label>
+                  :
+                  <label for="product-image-4" class="flex flex-col px-10 items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800  hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                      <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                      </svg>
+                      <p class="mb-2 text-sm text-center text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                      <p class="text-xs text-center text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                    </div>
+                    <input onChange={getImage} id="product-image-4" type="file" accept='image/*' class="hidden" />
+                  </label>
               }
-             
+
             </div>
 
           </div>
@@ -357,8 +383,8 @@ export default function AddProductForm() {
         </div>
 
         <div id="bottom-button" className='flex gap-5'>
-          <button onClick={handleProductSubmit} className='bg-primary-btn text-white px-4 py-2 rounded'>Add Product</button>
-          <button className='bg-primary-btn text-white px-4 py-2 rounded'>Save Product</button>
+          <button id='add' onClick={handleProductAdd} className='bg-primary-btn text-white px-4 py-2 rounded'>Add Product</button>
+          <button id='saved' onClick={handleProductAdd} className='bg-primary-btn text-white px-4 py-2 rounded'>Save Product</button>
           <button className='bg-primary-btn text-white px-4 py-2 rounded'>Schedule</button>
         </div>
       </div>
