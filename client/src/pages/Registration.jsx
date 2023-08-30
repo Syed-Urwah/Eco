@@ -19,20 +19,7 @@ export default function Registration() {
 
   const navigate = useNavigate();
 
-  function handleGoogleLogo() {
-    const defaultGoogle = document.getElementById('default-google');
-    const hoverGoogle = document.getElementById('hover-google');
-    if (!hover) {
-      defaultGoogle.classList.add('hidden');
-      hoverGoogle.classList.remove('hidden');
-      sethover(true)
-    } else {
-      defaultGoogle.classList.remove('hidden');
-      hoverGoogle.classList.add('hidden');
-      sethover(false)
-    }
-
-  }
+  
 
   const handleSignUp = async (e) =>{
     e.preventDefault();

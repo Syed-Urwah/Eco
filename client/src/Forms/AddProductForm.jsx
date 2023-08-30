@@ -7,7 +7,7 @@ import { Img } from 'react-image'
 import axios from 'axios';
 
 
-export default function AddProductForm() {
+export default function AddProductForm({setAlert}) {
 
 
 
@@ -43,6 +43,8 @@ export default function AddProductForm() {
     status: "",
     price: ""
   })
+
+  const [error, setError] = useState([])
 
   const [uploadTask, setUploadTask] = useState(null);
 
@@ -81,9 +83,33 @@ export default function AddProductForm() {
         }
       })
       console.log(response)
+      setAlert({
+        status: true,
+        message: "product Added Successfully"
+      })
+      setTimeout(()=>{
+        setAlert({
+          status: false,
+          message: ""
+        })
+      },5000)
 
     } catch (error) {
-      console.log(error.response.data.keyPattern.title)
+      console.log(error.response.data.errors)
+      let errors = error.response.data.errors;
+      // Convert object to array of key-value pairs
+      const keyValueArray = Object.entries(errors);
+      console.log(keyValueArray)
+      keyValueArray.map((a)=>{
+        console.log(a[1].message);
+      })
+      // const transformedObject = {};
+      // for (const key in errors) {
+      //   transformedObject[key] = errors[key] + '_transformed';
+      // }
+      // console.log(transformedObject)
+
+
     }
 
 
@@ -189,7 +215,9 @@ export default function AddProductForm() {
 
 
   return (
+   
     <form onSubmit={handleProductAdd} className='flex gap-4 flex-wrap lg:flex-nowrap '>
+      
       <div id="left1" className='w-full flex flex-col gap-4  outline-red-700'>
 
         <div id='first-row' className="flex flex-col gap-2">

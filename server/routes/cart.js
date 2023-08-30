@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middle-ware/verifyToken');
-const Cart = require('../models/Cart');
+const Cart = require('../Models/Cart');
 
 
 //Create Cart 
