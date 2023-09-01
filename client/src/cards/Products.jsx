@@ -4,6 +4,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { addProductToCart } from '../redux/cart/cartSlice'
+import {persistor} from '../redux/store'
 
 
 export default function Products({ product }) {
@@ -14,17 +15,20 @@ export default function Products({ product }) {
 
   const handleCart = () =>{
     console.log(product)
-    let productid = {
-      id: product.id
-    }
-    dispatch(addProductToCart(productid))
+    
+    
+    dispatch(addProductToCart(product._id))
     console.log(productCart)
+  }
+
+  function handlePersist(){
+    localStorage.clear();
   }
 
   return (
     <div className='w-96 flex flex-col items-center'>
       <Link id='product-card' to="/single-product">
-        <img className='w-full h-80 object-cover rounded-lg brightness-20' src={product.thumbnail} alt="" />
+        <img className='w-full h-80 object-cover rounded-lg brightness-20' src={product.img[0]} alt="" />
         <div className="product-details flex flex-col justify-center items-center relative bottom-20 h-20 bg-[rgba(255,255,255,.7)]">
           <h4 className='text-2xl font-semibold'>{product.title}</h4>
           <p className='text-gray-600'>${product.price}</p>
@@ -40,6 +44,7 @@ export default function Products({ product }) {
 
       <div id='add-to-cart' className="button flex justify-center relative bottom-16">
         <button onClick={handleCart} className='border border-gray-500 px-2 py-2 font-semibold rounded-md'>ADD TO CART</button>
+        <button onClick={handlePersist} className='border border-gray-500 px-2 py-2 font-semibold rounded-md'>Remove persist</button>
       </div>
     </div>
   )

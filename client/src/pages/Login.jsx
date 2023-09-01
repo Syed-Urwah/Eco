@@ -35,8 +35,9 @@ export default function Login() {
 
   const handleLogin = async (e) =>{
     e.preventDefault();
+    const url = import.meta.env.VITE_BASEURL + '/api/auth/login';
     try {
-      const response = await axios.post('http://localhost:8000/api/auth/login',{
+      const response = await axios.post(url,{
         email: email,
         password: password
       })

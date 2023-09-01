@@ -73,4 +73,10 @@ router.delete('/delete/:id', verifyToken, async (req,res)=>{
     
 })
 
+//get all products
+router.get('/', async (req,res)=>{
+    const products = await Product.find();
+    res.status(200).json(products);
+})
+
 module.exports = router
