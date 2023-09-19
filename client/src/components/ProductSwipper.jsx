@@ -30,8 +30,8 @@ export default function ProductSwipper({ product }) {
             >
                
 
-                { product.images &&
-                    product.images.map((images) => {
+                { product.img &&
+                    product.img.map((images) => {
                         return <SwiperSlide key={images}>
                                     <img className="w-full h-full object-cover rounded-3xl bg-slate-500" src={images} />
                                 </SwiperSlide>
@@ -47,8 +47,8 @@ export default function ProductSwipper({ product }) {
                 modules={[FreeMode, Navigation, Thumbs]}
                 className="mySwiper horizontalSwipper py-5"
             >
-                {product.images &&
-                    product.images.map((images) => {
+                {product.img &&
+                    product.img.map((images) => {
                         return <SwiperSlide key={images} className=" w-80 lg:w-52 hover:cursor-pointer">
                                     <img className="w-full object-cover rounded-2xl" src={images} />
                                 </SwiperSlide>

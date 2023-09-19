@@ -79,4 +79,11 @@ router.get('/', async (req,res)=>{
     res.status(200).json(products);
 })
 
+//get all products
+router.get('/:id', async (req,res)=>{
+    const id = await req.params.id
+    const products = await Product.findById(id);
+    res.status(200).json(products);
+})
+
 module.exports = router

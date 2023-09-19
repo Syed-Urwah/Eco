@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import SideBar from '../../../components/SideBar'
-import sideBarClose from '../../../assets/functions/sideBarClose'
 import AddProductForm from '../../../Forms/AddProductForm';
 import AlertSuccess from '../../../components/AlertSuccess';
 

@@ -29,7 +29,7 @@ export default function HeroSection() {
     }, [])
 
     return (
-        <section className='h-full w-screen bg-[#e2f3ff] py-20 flex flex-wrap-reverse justify-evenly gap-20'>
+        <section className='h-full w-full bg-[#e2f3ff] py-20 flex flex-wrap-reverse justify-evenly gap-20'>
             <div className="left w-80 flex flex-col justify-center gap-4">
                 <p className='text-[#3584e4]'>Ecommerce</p>
                 <h2 className='text-6xl font-extrabold'>{product.title}</h2>

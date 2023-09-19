@@ -27,7 +27,10 @@ function App() {
         <Header />
         <Routes>
           <Route index element={<Home />} />
-          <Route path='products' element={<ArchiveProduct />} />
+          <Route path='/products'>
+            <Route index element={<ArchiveProduct />} />
+            <Route path=':id' element={<SingleProduct />}/>
+          </Route>
           <Route path='single-product' element={<SingleProduct />} />
           <Route path='login' element={<Login />} />
           <Route path='registration' element={<Registration />} />

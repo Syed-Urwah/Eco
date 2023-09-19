@@ -3,14 +3,25 @@ import React, { useEffect, useState } from 'react'
 import ProductSwipper from '../components/ProductSwipper';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addProductToCart } from '../redux/cart/cartSlice';
 
 export default function SingleProduct() {
 
   const [product, setProduct] = useState({});
   const [count, setCount] = useState(0)
+  const params = useParams();
+
+  const productCart = useSelector((state)=> state.cart.products);
+  const dispatch = useDispatch();
+
 
   const fetchProduct = async () => {
-    const response = await axios.get('https://dummyjson.com/products/1');
+    console.log(params);
+    const url = import.meta.env.VITE_BASEURL + '/api/product/'+params.id;
+    // const response = await axios.get('https://dummyjson.com/products/1');
+    const response = await axios.get(url);
     setProduct(response.data);
     console.log(response.data);
   }
@@ -27,6 +38,14 @@ export default function SingleProduct() {
   useEffect(() => {
     fetchProduct();
   }, [])
+
+  const handleCart = () =>{
+    console.log(product)
+    
+    
+    dispatch(addProductToCart(product._id))
+    console.log(productCart)
+  }
 
   return (
     <section className='w-screen py-20 px-5 sm:px-10 flex flex-col md:flex-row gap-4 md:items-start items-center'>
@@ -56,7 +75,7 @@ export default function SingleProduct() {
 
           <button className=' bg-[#3584e4] text-white text-xs lg:text-base px-4 py-2'>Buy</button>
           <p>Rs ${product.price * count}</p>
-          <button className=' bg-[#3584e4] text-white text-xs lg:text-base px-4 py-2'>ADD TO CART </button>
+          <button onClick={handleCart} className=' bg-[#3584e4] text-white text-xs lg:text-base px-4 py-2'>ADD TO CART </button>
         </div>
       </div>
     </section>
